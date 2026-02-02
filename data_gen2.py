@@ -121,6 +121,7 @@ def follow_id_gen(index):
 def follow_id_1(num_pages):
     return random.randint(1, num_pages)
 
+#add check to ensure same relationship doesn't already exist
 #select random id again that isn't same as first id
 def follow_id_2(follow_1, num_pages):
     follow_2 = random.randint(1, num_pages)

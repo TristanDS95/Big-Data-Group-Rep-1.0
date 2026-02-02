@@ -28,9 +28,6 @@ DESCRIPTION_PHRASES = [
     "Started following for {reason}",
 ]
 
-ActionType = [
-    "view", "like", "comment", "share", "follow",
-    "unfollow", "message", "bookmark", "mention", "react",
 ]
 Null = None
 
@@ -40,12 +37,10 @@ ActionType2 = [
     ("viewed","shared"),("viewed","saved"),("viewed","followed"),("viewed","direct message"),
     ("viewed", Null),]
 
+
 SMALL_CONFIG = {
-    "num_pages": 100,
-    "num_follows": 500,
+    "num_pages": 1_000,
+    "num_follows": 20_000,
+    "num_actions": 10_000
 }
 
-FULL_CONFIG = {
-    "num_pages": 200_000,
-    "num_follows": 10_000_000,
-}
