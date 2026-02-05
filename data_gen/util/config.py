@@ -35,3 +35,13 @@ DESCRIPTION_PHRASES = [
     "Followed because {reason}", "Connected due to {reason}",
     "Became friends because of {reason}", "Started following for {reason}"
 ]
+
+
+Null = None
+
+ACTION_TYPES = [
+    ( "viewed", "poked "),("viewed","left a note"),("viewed","liked"),
+    ("viewed","loved"),("viewed","disliked"),("viewed","sad"),( "viewed", "poked "),
+    ("viewed","shared"),("viewed","saved"),("viewed","followed"),("viewed","direct message"),
+    ("viewed", Null),
+]

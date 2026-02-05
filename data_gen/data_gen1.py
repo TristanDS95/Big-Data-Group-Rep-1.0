@@ -7,12 +7,14 @@
 from faker import Faker
 import random
 from datetime import datetime
+import csv
 
 from util.config import HOBBIES
 from util.config import SMALL_CONFIG, FULL_CONFIG
 from util.config import JOB_TITLES
 from util.config import FOLLOW_REASONS
 from util.config import DESCRIPTION_PHRASES
+from util.config import ACTION_TYPES
 
 seed = 42
 random.seed(seed)
@@ -100,21 +102,31 @@ def generate_circlenet_set(mode="small", out_path=None):
 def follow_id_gen(index):
     return index + 1
 
-#select random id from CircleNetPage
-def follow_id_1(num_pages):
-    return random.randint(1, num_pages)
 
-#select random id again that isn't same as first id
-def follow_id_2(follow_1, num_pages):
-    follow_2 = random.randint(1, num_pages)
-    if follow_2 == follow_1:
-        return follow_id_2(follow_1, num_pages)
-    return follow_2
+#change this so number of follows per person is more randomized
+def generate_follow_relation(n_pages, n_follows):
+
+    base_k = max(1, n_follows // n_pages)
+    remainder = n_follows % n_pages
+
+    for follower_id in range(1, n_pages+1):
+        k = base_k + (1 if follower_id <= remainder else 0) # distribute remainder
+        k = min(k, n_pages - 1) # ensure we dont exceed available followees
+
+        followees = set()
+        while len(followees) < k:
+            followee_id = random.randint(1, n_pages)
+            if followee_id != follower_id:
+                followees.add(followee_id)
+        for followee_id in followees:
+            yield follower_id, followee_id
+        
 
 def relation_date_gen():
     start_date = int(datetime(2020, 1, 1).timestamp())
     end_date = int(datetime(2025, 12, 31).timestamp())
     return random.randint(start_date, end_date)
+
 
 def description_gen():
     for _ in range(10):
@@ -124,7 +136,8 @@ def description_gen():
         if 20 <= len(desc) <= 50:
             return desc
     return "Followed for an unspecified reason"
-        
+
+
 def generate_follows_set(mode="small", out_path=None):
     if out_path is None:
         out_path = f"CircleNetFollows_{mode}_{seed}.csv"
@@ -136,12 +149,14 @@ def generate_follows_set(mode="small", out_path=None):
         n_pages = FULL_CONFIG["num_pages"]
         n_follows = FULL_CONFIG["num_follows"]
 
+
     f = open(out_path, "w", encoding="utf-8")
+
+    rel_gen = generate_follow_relation(n_pages, n_follows)
 
     for i in range(n_follows):
         follow_ID = follow_id_gen(i)
-        follower_ID = follow_id_1(n_pages)
-        followee_ID = follow_id_2(follower_ID, n_pages)
+        follower_ID, followee_ID = next(rel_gen)
         date = relation_date_gen()
         description = description_gen()
 
@@ -158,10 +173,58 @@ def generate_follows_set(mode="small", out_path=None):
     f.close()
 
 
+
+
+
+# ACTIVITY LOG DATASET GENERATOR
+def action_id_gen(index):
+    return index + 1
+
+
+def action_type_gen():
+    action_type = random.choice(ACTION_TYPES)
+    return str(action_type[0]) + str(" - ") + str(action_type[1])
+
+# Action time list - integer between 1 and 50
+def action_time_gen():
+    return random.randint(1,100000)
+
+
+
+def generate_activity_log_set(mode="small", out_path=None):
+    if out_path is None:
+        out_path = f"ActivityLog_{mode}_{seed}.csv"
+
+    if mode == "small":
+        num_pages = SMALL_CONFIG["num_pages"]
+        num_actions = SMALL_CONFIG["num_actions"]
+    else:
+        num_pages = FULL_CONFIG["num_pages"]
+        num_actions = FULL_CONFIG["num_actions"]
+
+    f = open(out_path, "w")
+
+    for i in range(num_actions):
+        action_id = action_id_gen(i)
+        by_who = random.randint(1, num_pages)
+        whatpage = random.randint(1, num_pages)
+        action_type = action_type_gen()
+        action_time = action_time_gen()
+
+
+        line = str(action_id) + "," + str(by_who) + "," + str(whatpage) + "," + str(action_type) + "," + str(action_time) + "\n"
+        f.write(line)
+
+    f.close()
+
+
+
 #change to large for full size data set
-generate_circlenet_set("full")
+generate_circlenet_set("small")
 
 # use small for testing, full or anything else for full size
-generate_follows_set("full")
+generate_follows_set("small")
+
+generate_activity_log_set("small")
 
 
