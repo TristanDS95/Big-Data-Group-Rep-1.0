@@ -23,3 +23,10 @@ JOB_TITLES = [
     "Engineer", "Worker", "Product Manager", "Laborer", "Plumber",
     "Electrician", "Teacher", "Nurse", "Artist", "Musician", "Scientist"
 ]
+ActionType = [
+    ( "viewed", "poked "),("viewed","lefft a note"),("viewed","liked"),
+    ("viewed","loved"),("viewed","disliked"),("viewed","sad"),( "viewed", "poked "),
+    ("viewed","shared"),("viewed","saved"),("viewed","followed"),("viewed","direct message"),
+    ("viewed", Null),]
+
+
