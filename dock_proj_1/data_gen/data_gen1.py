@@ -21,7 +21,11 @@ fake.seed_instance(seed)
 # indicating the owner of the page (there will be 200,000 lines)
 def id_gen(index):
     return index + 1
-
+#Action ID Generator - unique sequential number (integer) from 1 to 10,000,000
+# indicating the ID of the action on the page (there will be 10,000,000 lines)
+def action_id_gen(index):
+    return index + 1
+    
 # NickName - characters of length between 10 and 20 (do not use commas
 #inside this string)
 
@@ -58,7 +62,9 @@ def hobby_gen():
         return "hobbying"
 
 
-
+# Action time list - integer between 1 and 50
+def action_time_gene():
+    return random.randint(1,100000)
 
 
 #DEFINE SMALL/FULL RUN - keep on small for testing
